@@ -41,7 +41,7 @@ export default function MessageBubble({
 
         )}
 
-        <div className="break-words">
+        <div className="break-words whitespace-pre-wrap">
 
           {message.text}
 

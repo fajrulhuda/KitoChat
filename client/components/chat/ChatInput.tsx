@@ -37,24 +37,41 @@ export default function ChatInput({
   return (
     <div className="border-t bg-white p-5">
 
-      <div className="flex items-center gap-3">
+      <div className="flex items-end gap-3">
 
-        <input
-          type="text"
+        <textarea
           value={message}
           placeholder="Tulis pesan..."
-          onChange={(e) => handleChange(e.target.value)}
+          rows={1}
+          onChange={(e) => {
+            handleChange(e.target.value);
+
+            const textarea = e.target;
+            const maxHeight = 24 * 6;
+
+            textarea.style.height = "auto";
+            textarea.style.height = `${Math.min(textarea.scrollHeight, maxHeight)}px`;
+
+            // Scrollbar hanya muncul jika sudah melebihi 6 baris
+            textarea.style.overflowY =
+              textarea.scrollHeight > maxHeight ? "auto" : "hidden";
+            
+          }}
           onKeyDown={(e) => {
-            if (e.key === "Enter") {
+            if (e.key === "Enter" && !e.shiftKey) {
+              e.preventDefault();
               handleSend();
+
+              // Kembalikan tinggi setelah pesan terkirim
+              e.currentTarget.style.height = "auto";
             }
           }}
-          className="flex-1 rounded-full border border-gray-300 px-5 py-3 outline-none transition focus:border-blue-600"
+          className="flex-1 resize-none overflow-hidden rounded-2xl border border-gray-300 px-5 py-3 outline-none transition focus:border-blue-600"
         />
 
         <button
           onClick={handleSend}
-          className="rounded-full bg-blue-600 px-7 py-3 font-semibold text-white transition hover:bg-blue-700"
+          className="rounded-full bg-blue-600 px-7 py-3 font-semibold text-white transition hover:bg-blue-800"
         >
           Kirim
         </button>
